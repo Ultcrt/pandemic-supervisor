@@ -1,0 +1,18 @@
+@import "Vue.css";
+
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+}
+
+#app {
+    height: 100%;
+}
+
+.global-input {
+    border-radius: 20px;
+    font-size: 28px;
+}

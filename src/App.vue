@@ -1,44 +1,27 @@
 <script setup lang="ts">
+import Login from "./components/Login.vue"
+import Admin from "./components/Admin.vue"
+import Student from "./components/Student.vue"
+import {computed, ref} from "vue";
+import type {Component} from "vue";
 
-const routes = {
-  "/login":
+const routes: {[key: string]: Component} = {
+  "/login": Login,
+  "/admin": Admin,
+  "/student": Student,
 }
+
+window.location.hash = "/login"
+let currentLocation = ref(window.location.hash)
+window.addEventListener("hashchange", (event) => {
+  currentLocation.value = window.location.hash
+})
+
+let currentPage = computed(()=>{
+  return routes[currentLocation.value.slice(1)]
+})
 </script>
 
 <template>
-  <header>
-  </header>
-
-  <main>
-
-  </main>
+  <component :is="currentPage"/>
 </template>
-
-<style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
-</style>
