@@ -26,15 +26,18 @@
 
 <script setup lang="ts">
 import {ref} from "vue";
+import {Authority, authority} from "../scripts/SharedState";
 
 let loginType = ref("学生")
 
 function login() {
   switch (loginType.value) {
     case "学生":
+      authority.value = Authority.Student
       window.location.hash = "/student"
-      break;
+      break
     case "管理员":
+      authority.value = Authority.Admin
       window.location.hash = "/admin"
       break;
   }

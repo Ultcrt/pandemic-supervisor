@@ -42,6 +42,12 @@
 <script setup lang="ts">
 import {ref} from "vue";
 import Menu from "./Menu.vue"
+import {Authority, authority} from "../scripts/SharedState";
+
+// 权限检测
+if (authority.value !== Authority.Student) {
+  window.location.hash = "#/login"
+}
 
 class SubmitRecord {
   public recordDatetime: Date
