@@ -6,10 +6,20 @@ html {
 
 body {
     height: 100%;
+    background-color: beige;
 }
 
 #app {
     height: 100%;
+}
+
+* {
+    font-size: 18px;
+    color: black;
+}
+
+table {
+    width: 100%;
 }
 
 table, td, th {
@@ -18,9 +28,6 @@ table, td, th {
 }
 
 .global-input {
-    border-radius: 20px;
-    font-size: 18px;
-    border: none;
     cursor: pointer;
 }
 .global-input:active {
@@ -29,4 +36,10 @@ table, td, th {
 
 .clickable {
     cursor: pointer;
+}
+
+.menu-page {
+    height: 100%;
+    width: 80%;
+    overflow: auto;
 }

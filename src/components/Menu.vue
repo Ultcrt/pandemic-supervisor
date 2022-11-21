@@ -25,7 +25,7 @@ function tabChanged(tabName: string) {
   justify-content: flex-start;
   width: 20%;
   height: 100%;
-  background-color: indianred;
+  background-color: darkred;
   margin-right: 20px;
 }
 
@@ -33,10 +33,13 @@ function tabChanged(tabName: string) {
   width: 100%;
   height: 5%;
   border: none;
-  background-color: gray;
+  background-color: darkgray;
+  cursor: pointer;
+  border-top: 5px solid darkgray;
 }
 
 .menu-button.selected {
-  background-color: aqua;
+  background-color: beige;
+  border-top: 5px solid darkred;
 }
 </style>

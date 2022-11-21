@@ -54,7 +54,7 @@ function login() {
   justify-content: space-around;
   align-items: center;
 
-  background-color: aqua;
+  background-color: beige;
 }
 
 .sub-window {
@@ -64,7 +64,6 @@ function login() {
 #login-sub-window {
   width: 40vh;
   height: 40vh;
-  border-radius: 20px;
 
   display: flex;
   flex-direction: column;
@@ -101,5 +100,6 @@ function login() {
 
 .login-input {
   width: 75%;
+  font-size: 24px;
 }
 </style>
