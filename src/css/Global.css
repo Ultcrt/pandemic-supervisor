@@ -12,7 +12,21 @@ body {
     height: 100%;
 }
 
+table, td, th {
+    border: 1px solid;
+    border-collapse: collapse;
+}
+
 .global-input {
     border-radius: 20px;
-    font-size: 28px;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+}
+.global-input:active {
+    background-color: gray;
+}
+
+.clickable {
+    cursor: pointer;
 }

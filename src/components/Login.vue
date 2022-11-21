@@ -6,7 +6,7 @@
       </div>
       <div id="login-type-div" class="login-input-div">
         <label class="login-label">类型：</label>
-        <select id="login-type-select" class="global-input login-input">
+        <select id="login-type-select" class="global-input login-input" v-model="loginType">
           <option>学生</option>
           <option>管理员</option>
         </select>
@@ -19,12 +19,26 @@
         <label class="login-label">密码：</label>
         <input class="global-input login-input" type="password"/>
       </div>
-      <button id="login-button" class="global-input login-input">登录</button>
+      <button id="login-button" class="global-input login-input" @click="login">登录</button>
     </div>
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import {ref} from "vue";
+
+let loginType = ref("学生")
+
+function login() {
+  switch (loginType.value) {
+    case "学生":
+      window.location.hash = "/student"
+      break;
+    case "管理员":
+      window.location.hash = "/admin"
+      break;
+  }
+}
 </script>
 
 <style scoped>
@@ -68,7 +82,8 @@
 
 .login-label {
   color: white;
-  font-size: 28px;
+  font-size: 24px;
+  height: 100%;
 }
 
 .login-input-div {
@@ -78,6 +93,7 @@
   margin-left: 10px;
   margin-right: 10px;
   width: 90%;
+  height: 10%;
 }
 
 .login-input {

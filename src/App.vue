@@ -5,7 +5,8 @@ import Student from "./components/Student.vue"
 import {computed, ref} from "vue";
 import type {Component} from "vue";
 
-const routes: {[key: string]: Component} = {
+// 路由跳转相关代码
+const routes: { [key: string]: Component } = {
   "/login": Login,
   "/admin": Admin,
   "/student": Student,
@@ -17,7 +18,7 @@ window.addEventListener("hashchange", (event) => {
   currentLocation.value = window.location.hash
 })
 
-let currentPage = computed(()=>{
+let currentPage = computed(() => {
   return routes[currentLocation.value.slice(1)]
 })
 </script>
