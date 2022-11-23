@@ -6,38 +6,43 @@
       </div>
       <div id="login-type-div" class="login-input-div">
         <label class="login-label">类型：</label>
-        <select id="login-type-select" class="global-input login-input" v-model="loginType">
+        <select id="login-type-select" class="global-input clickable login-input" v-model="loginType">
           <option>学生</option>
           <option>管理员</option>
         </select>
       </div>
       <div id="login-account-div" class="login-input-div">
         <label class="login-label">账号：</label>
-        <input class="global-input login-input"/>
+        <input class="login-input" v-model="id"/>
       </div>
       <div id="login-password-div" class="login-input-div">
         <label class="login-label">密码：</label>
-        <input class="global-input login-input" type="password"/>
+        <input class="login-input" type="password" v-model="password"/>
       </div>
-      <button id="login-button" class="global-input login-input" @click="login">登录</button>
+      <button id="login-button" class="global-input clickable login-input" @click="login">登录</button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import {ref} from "vue";
-import {Authority, authority} from "../scripts/SharedState";
+import {Authority, authority, authorizedId} from "../scripts/SharedState";
 
 let loginType = ref("学生")
+
+let id = ref("")
+let password = ref("")
 
 function login() {
   switch (loginType.value) {
     case "学生":
       authority.value = Authority.Student
+      authorizedId.value = id.value
       window.location.hash = "/student"
       break
     case "管理员":
       authority.value = Authority.Admin
+      authorizedId.value = id.value
       window.location.hash = "/admin"
       break;
   }

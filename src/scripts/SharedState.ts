@@ -8,6 +8,8 @@ export class Authority {
 
 export let authority = ref(Authority.Visitor)
 
+export let authorizedId = ref("")
+
 export let departmentList = requestDepartmentList()
 
 export let locationList = requestLocationList()

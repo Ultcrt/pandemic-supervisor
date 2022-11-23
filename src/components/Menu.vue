@@ -26,7 +26,6 @@ function tabChanged(tabName: string) {
   width: 20%;
   height: 100%;
   background-color: darkred;
-  margin-right: 20px;
 }
 
 .menu-button {
