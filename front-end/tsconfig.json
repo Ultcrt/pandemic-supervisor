@@ -6,7 +6,7 @@
     "src/**/*.vue"
   ],
   "compilerOptions": {
-    "baseUrl": "./pandemic-supervisor",
+    "baseUrl": "./",
     "paths": {
       "@/*": ["./src/*"]
     }
