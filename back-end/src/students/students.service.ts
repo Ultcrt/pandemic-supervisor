@@ -36,7 +36,7 @@ export class StudentsService {
     public async queryForHistory(info: AccountInfo): Promise<IResponse> {
         const connection = await createConnection(dataBaseLoginInfo);
 
-        if (checkAdminAccount(info) || !await StudentsService.checkStudentAccount(connection, info)) {
+        if (!checkAdminAccount(info) && !await StudentsService.checkStudentAccount(connection, info)) {
             return {
                 status: ResponseStatus.FAIL
             }
@@ -56,7 +56,7 @@ export class StudentsService {
     public async submit(info: AccountInfo, detectResult: string, location: string, remarks: string, college: string) {
         const connection = await createConnection(dataBaseLoginInfo);
 
-        if (!await StudentsService.checkStudentAccount(connection, info, college)) {
+        if (!checkAdminAccount(info) && !await StudentsService.checkStudentAccount(connection, info, college)) {
             return {
                 status: ResponseStatus.FAIL
             }

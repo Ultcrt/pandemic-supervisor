@@ -6,7 +6,7 @@ import {checkAdminAccount, dataBaseLoginInfo} from "../privateInfo";
 
 @Injectable()
 export class AdminService {
-    public async queryForHistory(info: AccountInfo): Promise<IResponse> {
+    public async getNotDoneTestList(info: AccountInfo): Promise<IResponse> {
         const connection = await createConnection(dataBaseLoginInfo);
 
         if (checkAdminAccount(info) || !await StudentsService.checkStudentAccount(connection, info)) {
