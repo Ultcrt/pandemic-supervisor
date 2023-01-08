@@ -89,7 +89,7 @@ import {
   authorizedPassword,
   axiosInstance,
   departmentList,
-  locationList
+  locationList, ResponseStatus
 } from "../scripts/SharedState";
 import * as echarts from "echarts"
 import type {EChartsType} from "echarts";
@@ -109,8 +109,7 @@ interface StudentData {
   name: string,
   class: string,
   phone_num: string,
-  college: string,
-  password: string
+  college: string
 }
 
 let studentIdInput = ref("")
@@ -130,7 +129,6 @@ let targetStudentInfo = ref<StudentData>({
   class: "",
   phone_num: "",
   college: "",
-  password: ""
 })
 
 let studentRecordsChart: null | EChartsType
@@ -142,8 +140,10 @@ function requestNotDoneTestList() {
     password: authorizedPassword.value,
     type: authority.value
   }).then(
-      function () {
-
+      function (response) {
+        if (response.data.status === ResponseStatus.SUCCESS) {
+          notDoneTestList.value = response.data.data
+        }
       }
   )
   for (let record of database) {

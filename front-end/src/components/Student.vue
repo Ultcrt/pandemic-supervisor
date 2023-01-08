@@ -71,9 +71,6 @@ function requestHistory() {
         if (response.data.status === ResponseStatus.SUCCESS) {
           historyList.value = response.data.data
         }
-        else {
-          historyList.value = []
-        }
       }
   )
 }
