@@ -82,7 +82,15 @@
 <script setup lang="ts">
 import Menu from "./Menu.vue";
 import {reactive, ref} from "vue";
-import {Authority, authority, departmentList, locationList} from "../scripts/SharedState";
+import {
+  Authority,
+  authority,
+  authorizedId,
+  authorizedPassword,
+  axiosInstance,
+  departmentList,
+  locationList
+} from "../scripts/SharedState";
 import * as echarts from "echarts"
 import type {EChartsType} from "echarts";
 import Submit from "../components/Submit.vue";
@@ -96,11 +104,13 @@ if (authority.value !== Authority.Admin) {
   window.location.hash = "#/login"
 }
 
-interface IStudentInfo {
-  id: string,
+interface StudentData {
+  stu_id: string,
   name: string,
-  phoneNumber: string,
-  department: string,
+  class: string,
+  phone_num: string,
+  college: string,
+  password: string
 }
 
 let studentIdInput = ref("")
@@ -110,31 +120,34 @@ let tabs = ['本日未打卡', "连续两日未打卡", '查询学生记录', '�
 
 let tabSelected = ref(tabs[0])
 
-let notDoneTestList: Array<IStudentInfo> = reactive([])
+let notDoneTestList = ref<Array<StudentData>>([])
 
-let notDoneTestInTwoDaysList: Array<IStudentInfo> = reactive([])
+let notDoneTestInTwoDaysList = ref<Array<StudentData>>([])
 
-let targetStudentInfo: IStudentInfo = reactive({
-  id: "",
+let targetStudentInfo = ref<StudentData>({
+  stu_id: "",
   name: "",
-  phoneNumber: "",
-  department: ""
+  class: "",
+  phone_num: "",
+  college: "",
+  password: ""
 })
 
 let studentRecordsChart: null | EChartsType
 
 function requestNotDoneTestList() {
-  // TODO 接入数据库
-  let database = [
-    {id: "12345678", name: "李伟", phoneNumber: "1008611", department: "软件学院"},
-    {id: "12345678", name: "李伟", phoneNumber: "1008611", department: "软件学院"},
-    {id: "12345678", name: "李伟", phoneNumber: "1008611", department: "软件学院"},
-    {id: "12345678", name: "李伟", phoneNumber: "1008611", department: "软件学院"},
-  ]
+  notDoneTestList.value = []
+  axiosInstance.post("/admin/not-done-test", {
+    id: authorizedId.value,
+    password: authorizedPassword.value,
+    type: authority.value
+  }).then(
+      function () {
 
-  notDoneTestList.length = 0
+      }
+  )
   for (let record of database) {
-    notDoneTestList.push(record)
+    notDoneTestList.value.push(record)
   }
 }
 
@@ -147,9 +160,9 @@ function requestNotDoneTestInTwoDaysList() {
     {id: "12345679", name: "张强", phoneNumber: "1008611", department: "软件学院"},
   ]
 
-  notDoneTestInTwoDaysList.length = 0
+  notDoneTestInTwoDaysList.value.length = 0
   for (let record of database) {
-    notDoneTestInTwoDaysList.push(record)
+    notDoneTestInTwoDaysList.value.push(record)
   }
 }
 

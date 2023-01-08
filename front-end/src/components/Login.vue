@@ -62,10 +62,6 @@ function login() {
           notification.value = "登录失败，请检查登录信息"
         }
       })
-      authority.value = Authority.Student
-      authorizedId.value = id.value;
-      authorizedPassword.value = password.value;
-      window.location.hash = "/student"
       break
     case "管理员":
       axiosInstance.post("/admin/login", {

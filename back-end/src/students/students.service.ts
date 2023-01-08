@@ -7,13 +7,23 @@ import {IResponse, ResponseStatus} from "../interfaces/response";
 
 @Injectable()
 export class StudentsService {
-    private static async checkStudentAccount(connection: Connection, info: AccountInfo): Promise<boolean> {
+    private static async checkStudentAccount(connection: Connection, info: AccountInfo, college?: string): Promise<boolean> {
         // 检查学生权限
         if (info.type == AccountType.Student) {
-            const [rows] = await connection.query<StudentData[]>(
-                "SELECT * FROM `students` WHERE `stu_id` = ? AND `password` = ?",
-                [info.id, info.password]
-            );
+            let rows: StudentData[]
+
+            if (!college) {
+                [rows] = await connection.query<StudentData[]>(
+                    "SELECT * FROM `students` WHERE `stu_id` = ? AND `password` = ?",
+                    [info.id, info.password]
+                );
+            }
+            else {
+                [rows] = await connection.query<StudentData[]>(
+                    "SELECT * FROM `students` WHERE `stu_id` = ? AND `password` = ? AND `college` = ?",
+                    [info.id, info.password, college]
+                );
+            }
 
             if (rows.length > 0) {
                 return true
@@ -43,10 +53,10 @@ export class StudentsService {
         }
     }
 
-    public async submit(info: AccountInfo, detectResult: string, location: string, remarks: string) {
+    public async submit(info: AccountInfo, detectResult: string, location: string, remarks: string, college: string) {
         const connection = await createConnection(dataBaseLoginInfo);
 
-        if (!await StudentsService.checkStudentAccount(connection, info)) {
+        if (!await StudentsService.checkStudentAccount(connection, info, college)) {
             return {
                 status: ResponseStatus.FAIL
             }

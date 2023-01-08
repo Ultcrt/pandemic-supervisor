@@ -3,16 +3,16 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { StudentsController } from './students/students.controller';
 import { StudentsService } from './students/students.service';
-import {dataBaseLoginInfo} from "./privateInfo";
 import {ServeStaticModule} from "@nestjs/serve-static";
 import { join } from 'path';
-import _default from "ts-jest";
+import { AdminController } from './admin/admin.controller';
+import { AdminService } from './admin/admin.service';
 
 @Module({
   imports: [ ServeStaticModule.forRoot({
     rootPath: join(__dirname, "..", "public")
   }) ],
-  controllers: [AppController, StudentsController],
-  providers: [AppService, StudentsService],
+  controllers: [AppController, StudentsController, AdminController],
+  providers: [AppService, StudentsService, AdminService],
 })
 export class AppModule {}

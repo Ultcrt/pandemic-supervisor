@@ -56,7 +56,8 @@ function submit() {
     type: authority.value,
     detect_result: detectResult.value,
     location: location.value,
-    remarks: remarks.value
+    remarks: remarks.value,
+    college: college.value
   }).then(
       function (response) {
         if (response.data.status === ResponseStatus.SUCCESS) {

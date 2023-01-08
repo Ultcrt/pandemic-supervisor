@@ -17,8 +17,9 @@ export class StudentsController {
     async submitClock(@Body()accountInfo: AccountInfo,
                       @Body("detect_result")detectResult,
                       @Body("location")location,
-                      @Body("remarks")remarks): Promise<IResponse> {
-        return this.studentService.submit(accountInfo, detectResult, location, remarks);
+                      @Body("remarks")remarks,
+                      @Body("college")college): Promise<IResponse> {
+        return this.studentService.submit(accountInfo, detectResult, location, remarks, college);
     }
 
     @Post("login")
