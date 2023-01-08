@@ -2,33 +2,71 @@
   <div id="submit">
     <div id="department" class="submit-row">
       <label class="login-label">学院：</label>
-      <select class="global-input" :class="props.disabled ? '' : 'clickable'" :disabled="props.disabled">
+      <select v-model="college" class="global-input" :class="props.disabled ? '' : 'clickable'" :disabled="props.disabled">
         <option v-for="item in departmentList">{{item}}</option>
       </select>
     </div>
     <div id="location" class="submit-row">
       <label class="login-label">所在地：</label>
-      <select class="global-input" :class="props.disabled ? '' : 'clickable'" :disabled="props.disabled">
+      <select v-model="location" class="global-input" :class="props.disabled ? '' : 'clickable'" :disabled="props.disabled">
         <option v-for="item in locationList">{{item}}</option>
       </select>
     </div>
     <div id="done-test" class="submit-row">
-      <label class="login-label">是否完成核算检测：</label>
-      <input type="checkbox" class="global-input" :class="props.disabled ? '' : 'clickable'" :disabled="props.disabled"/>
+      <label class="login-label">当日核酸结果：</label>
+      <select v-model="detectResult" class="global-input" :class="props.disabled ? '' : 'clickable'" :disabled="props.disabled">
+        <option v-for="item in detectResultTypes">{{item}}</option>
+      </select>
     </div>
-    <button id="submit-button" class="global-input" :class="props.disabled ? '' : 'clickable'" @click="submit" :disabled="props.disabled">提交</button>
+    <textarea v-model="remarks" placeholder=""></textarea>
+    <button id="submit-button" class="global-input" :class="readyToSubmit ? 'clickable' : ''" @click="submit" :disabled="!readyToSubmit">提交</button>
+    <p> <span v-html="`<span style='color: red'>${notification}</span>`"></span> </p>
   </div>
 </template>
 
 <script setup lang="ts">
-import {Authority, authority, locationList, departmentList} from "../scripts/SharedState";
+import {
+  authority,
+  locationList,
+  departmentList,
+  axiosInstance,
+  authorizedId,
+  authorizedPassword,
+  detectResultTypes, ResponseStatus
+} from "../scripts/SharedState";
+import {computed, ref} from "vue";
 
 let props = defineProps(["studentId", "disabled"])
 
-console.log(props)
+let college = ref("")
+let location = ref("")
+let detectResult = ref("")
+let remarks = ref("")
+
+let notification = ref("")
+
+const readyToSubmit = computed(() => {
+  return college.value !== "" && location.value !== "" && detectResult.value !== ""
+})
 
 function submit() {
-  // TODO 接入数据库
+  axiosInstance.post("/students/submit", {
+    id: authorizedId.value,
+    password: authorizedPassword.value,
+    type: authority.value,
+    detect_result: detectResult.value,
+    location: location.value,
+    remarks: remarks.value
+  }).then(
+      function (response) {
+        if (response.data.status === ResponseStatus.SUCCESS) {
+          notification.value = ""
+        }
+        else {
+          notification.value = "提交失败，请检查学院信息"
+        }
+      }
+  )
 }
 </script>
 

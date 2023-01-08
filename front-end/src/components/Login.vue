@@ -20,30 +20,70 @@
         <input class="login-input" type="password" v-model="password"/>
       </div>
       <button id="login-button" class="global-input clickable login-input" @click="login">登录</button>
+      <p id="login-notification"><span v-html="`<span style='color: white'>${notification}</span>`"></span></p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import {ref} from "vue";
-import {Authority, authority, authorizedId} from "../scripts/SharedState";
+import {
+  Authority,
+  authority,
+  authorizedId,
+  authorizedPassword,
+  axiosInstance,
+  ResponseStatus
+} from "../scripts/SharedState";
 
 let loginType = ref("学生")
 
 let id = ref("")
 let password = ref("")
 
+let notification = ref("")
+
 function login() {
   switch (loginType.value) {
     case "学生":
+      axiosInstance.post("/students/login", {
+        id: id.value,
+        password: password.value,
+        type: Authority.Student
+      }).then(function (response) {
+        if (response.data.status === ResponseStatus.SUCCESS) {
+          authority.value = Authority.Student
+          authorizedId.value = id.value;
+          authorizedPassword.value = password.value;
+          window.location.hash = "/student"
+          notification.value = ""
+        }
+        else {
+          notification.value = "登录失败，请检查登录信息"
+        }
+      })
       authority.value = Authority.Student
-      authorizedId.value = id.value
+      authorizedId.value = id.value;
+      authorizedPassword.value = password.value;
       window.location.hash = "/student"
       break
     case "管理员":
-      authority.value = Authority.Admin
-      authorizedId.value = id.value
-      window.location.hash = "/admin"
+      axiosInstance.post("/admin/login", {
+        id: id.value,
+        password: password.value,
+        type: Authority.Admin
+      }).then(function (response) {
+        if (response.data.status === ResponseStatus.SUCCESS) {
+          authority.value = Authority.Admin
+          authorizedId.value = id.value
+          authorizedPassword.value = password.value;
+          window.location.hash = "/admin"
+          notification.value = ""
+        }
+        else {
+          notification.value = "登录失败，请检查登录信息"
+        }
+      })
       break;
   }
 }
@@ -85,6 +125,10 @@ function login() {
 #login-title-label {
   font-size: 40px;
   color: white;
+}
+
+#login-notification {
+  height: 10%;
 }
 
 .login-label {

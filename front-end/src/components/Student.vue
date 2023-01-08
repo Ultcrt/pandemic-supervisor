@@ -11,13 +11,15 @@
           <th>打卡时间</th>
           <th>学院</th>
           <th>所在地</th>
-          <th>是否完成核酸检测</th>
+          <th>核酸结果</th>
+          <th>备注</th>
         </tr>
-        <tr v-for="item in requestHistory()">
-          <td>{{item.recordDatetime.toLocaleString()}}</td>
-          <td>{{item.department}}</td>
+        <tr v-for="item in historyList">
+          <td>{{new Date(item.clock_time).toLocaleString()}}</td>
+          <td>{{item.college}}</td>
           <td>{{item.location}}</td>
-          <td>{{item.doneTest ? "是" : "否"}}</td>
+          <td>{{item.detect_result}}</td>
+          <td>{{item.remarks}}</td>
         </tr>
       </table>
     </div>
@@ -28,7 +30,15 @@
 <script setup lang="ts">
 import {ref} from "vue";
 import Menu from "./Menu.vue"
-import {Authority, authority, locationList, departmentList, authorizedId} from "../scripts/SharedState";
+import {
+  Authority,
+  authority,
+  locationList,
+  departmentList,
+  authorizedId,
+  axiosInstance,
+  authorizedPassword, ResponseStatus
+} from "../scripts/SharedState";
 import Submit from "../components/Submit.vue";
 
 // 权限检测
@@ -36,29 +46,44 @@ if (authority.value !== Authority.Student) {
   window.location.hash = "#/login"
 }
 
-interface ISubmitRecord {
-  recordDatetime: Date
-  department: string
-  location: string
-  doneTest: boolean
+interface ClockData {
+  clock_time: number,
+  college: string,
+  location: string,
+  detect_result: string,
+  remarks: string,
 }
 
 let tabs = ['健康打卡', '打卡记录']
 
 let tabSelected = ref(tabs[0])
 
-function requestHistory(): Array<ISubmitRecord> {
-  // TODO 接入数据库
-  let database = [
-    {recordDatetime: new Date(), department: "软件学院", location: "创新港", doneTest: true},
-    {recordDatetime: new Date(), department: "软件学院", location: "创新港", doneTest: true},
-    {recordDatetime: new Date(), department: "软件学院", location: "创新港", doneTest: true},
-  ]
-  return database
+const historyList = ref<Array<ClockData>>([])
+
+function requestHistory() {
+  historyList.value = []
+  axiosInstance.post("/students/history", {
+    id: authorizedId.value,
+    password: authorizedPassword.value,
+    type: authority.value
+  }).then(
+      function (response) {
+        if (response.data.status === ResponseStatus.SUCCESS) {
+          historyList.value = response.data.data
+        }
+        else {
+          historyList.value = []
+        }
+      }
+  )
 }
 
 function onTabChanged(tabName: string) {
   tabSelected.value = tabName
+
+  if (tabName == "打卡记录") {
+    requestHistory()
+  }
 }
 </script>
 
