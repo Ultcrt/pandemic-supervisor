@@ -10,7 +10,7 @@
         <tr>
           <th>打卡时间</th>
           <th>学院</th>
-          <th>所在地</th>
+          <th>打卡位置</th>
           <th>核酸结果</th>
           <th>备注</th>
         </tr>
@@ -18,7 +18,7 @@
           <td>{{new Date(item.clock_time).toLocaleString()}}</td>
           <td>{{item.college}}</td>
           <td>{{item.location}}</td>
-          <td>{{item.detect_result}}</td>
+          <td>{{item.detect_result ?? "未检测"}}</td>
           <td>{{item.remarks}}</td>
         </tr>
       </table>
@@ -37,21 +37,13 @@ import {
   departmentList,
   authorizedId,
   axiosInstance,
-  authorizedPassword, ResponseStatus
+  authorizedPassword, ResponseStatus, type ClockData
 } from "../scripts/SharedState";
 import Submit from "../components/Submit.vue";
 
 // 权限检测
 if (authority.value !== Authority.Student) {
   window.location.hash = "#/login"
-}
-
-interface ClockData {
-  clock_time: number,
-  college: string,
-  location: string,
-  detect_result: string,
-  remarks: string,
 }
 
 let tabs = ['健康打卡', '打卡记录']

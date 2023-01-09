@@ -1,241 +1,412 @@
 <template>
-<div id="admin">
-  <Menu :tabs="tabs" @tab-changed="onTabChanged"></Menu>
-  <div class="menu-page" id="not-done-test" v-if="tabSelected === tabs[0]">
-    <div class="admin-input-div">
-      <label>学院：</label>
-      <select class="global-input clickable">
-        <option>全部</option>
-        <option v-for="item in departmentList">{{item}}</option>
-      </select>
-      <label>所在地：</label>
-      <select class="global-input clickable">
-        <option>全部</option>
-        <option v-for="item in locationList">{{item}}</option>
-      </select>
-      <button @click="requestNotDoneTestList" class="clickable">查询</button>
+  <div id="admin">
+    <Menu :tabs="tabs" @tab-changed="onTabChanged"></Menu>
+    <div class="menu-page" id="not-done-test" v-if="tabSelected === tabs[0]">
+      <div class="admin-input-div">
+        <label>学院：</label>
+        <select v-model="notDoneClockCollege" class="global-input clickable">
+          <option>全部</option>
+          <option v-for="item in departmentList">{{ item }}</option>
+        </select>
+        <label>所在地：</label>
+        <select v-model="notDoneClockLocation" class="global-input clickable">
+          <option>全部</option>
+          <option v-for="item in locationList">{{ item }}</option>
+        </select>
+        <button @click="requestNotDoneClockList" class="clickable">查询</button>
+      </div>
+      <p>今日未打卡人数：{{ notDoneClockList.length }}</p>
+      <div class="table-div">
+        <table>
+          <tr>
+            <th>学号</th>
+            <th>姓名</th>
+            <th>学院</th>
+            <th>班级</th>
+            <th>所在地</th>
+            <th>联系方式</th>
+            <th>操作</th>
+          </tr>
+          <tr v-for="item in notDoneClockList">
+            <td>{{ item.stu_id }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.college }}</td>
+            <td>{{ item.class }}</td>
+            <td>{{ item.location }}</td>
+            <td>{{ item.phone_num }}</td>
+            <td class="operation-td">
+              <button class="clickable global-input copy" :data-clipboard-text="item.stu_id">复制学号</button>
+            </td>
+          </tr>
+        </table>
+      </div>
     </div>
-    <p>今日未打卡人数：{{ notDoneTestList.length }}</p>
-    <div class="table-div">
-      <table>
-        <tr>
-          <th>学号</th>
-          <th>姓名</th>
-          <th>联系方式</th>
-          <th>操作</th>
-        </tr>
-        <tr v-for="item in notDoneTestList">
-          <td>{{item.id}}</td>
-          <td>{{item.name}}</td>
-          <td>{{item.phoneNumber}}</td>
-          <td class="operation-td"><button class="clickable global-input clickable">代打卡</button></td>
-        </tr>
-      </table>
+    <div class="menu-page" v-else-if="tabSelected === tabs[1]">
+      <div class="admin-input-div">
+        <label>学院：</label>
+        <select v-model="notDoneClockInTwoDaysCollege" class="global-input clickable">
+          <option>全部</option>
+          <option v-for="item in departmentList">{{ item }}</option>
+        </select>
+        <label>所在地：</label>
+        <select v-model="notDoneClockInTwoDaysLocation" class="global-input clickable">
+          <option>全部</option>
+          <option v-for="item in locationList">{{ item }}</option>
+        </select>
+        <button @click="requestNotDoneClockInTwoDaysList" class="clickable">查询</button>
+      </div>
+      <div class="table-div">
+        <table>
+          <tr>
+            <th>学号</th>
+            <th>姓名</th>
+            <th>学院</th>
+            <th>班级</th>
+            <th>所在地</th>
+            <th>联系方式</th>
+            <th>操作</th>
+          </tr>
+          <tr v-for="item in notDoneClockInTwoDaysList">
+            <td>{{ item.stu_id }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.college }}</td>
+            <td>{{ item.class }}</td>
+            <td>{{ item.location }}</td>
+            <td>{{ item.phone_num }}</td>
+            <td class="operation-td">
+              <button class="clickable global-input copy" :data-clipboard-text="item.stu_id">复制学号</button>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="menu-page" v-else-if="tabSelected === tabs[2]">
+      <div class="admin-input-div">
+        <label>学院：</label>
+        <select v-model="notDoneDetectCollege" class="global-input clickable">
+          <option>全部</option>
+          <option v-for="item in departmentList">{{ item }}</option>
+        </select>
+        <label>所在地：</label>
+        <select v-model="notDoneDetectLocation" class="global-input clickable">
+          <option>全部</option>
+          <option v-for="item in locationList">{{ item }}</option>
+        </select>
+        <button @click="requestNotDoneDetect" class="clickable">查询</button>
+      </div>
+      <div class="table-div">
+        <table>
+          <tr>
+            <th>学号</th>
+            <th>姓名</th>
+            <th>学院</th>
+            <th>班级</th>
+            <th>所在地</th>
+            <th>联系方式</th>
+            <th>操作</th>
+          </tr>
+          <tr v-for="item in notDoneDetectList">
+            <td>{{ item.stu_id }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.college }}</td>
+            <td>{{ item.class }}</td>
+            <td>{{ item.location }}</td>
+            <td>{{ item.phone_num }}</td>
+            <td class="operation-td">
+              <button class="clickable global-input copy" :data-clipboard-text="item.stu_id">复制学号</button>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="menu-page" v-else-if="tabSelected === tabs[3]">
+      <div class="admin-input-div">
+        <label>学号：</label>
+        <input v-model="targetStudentId"/>
+        <button @click="onInputTargetStudentId" class="clickable">查询</button>
+      </div>
+      <div id="history-graph-div" class="table-div"></div>
+      <div id="history-table-div" class="table-div">
+        <table>
+          <tr>
+            <th>打卡时间</th>
+            <th>学院</th>
+            <th>打卡位置</th>
+            <th>核酸结果</th>
+            <th>备注</th>
+          </tr>
+          <tr v-for="item in targetStudentHistoryList">
+            <td>{{new Date(item.clock_time).toLocaleString()}}</td>
+            <td>{{item.college}}</td>
+            <td>{{item.location}}</td>
+            <td>{{item.detect_result ?? "未检测"}}</td>
+            <td>{{item.remarks}}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="menu-page" v-else-if="tabSelected === tabs[4]">
+      <div class="admin-input-div">
+        <label>学号：</label>
+        <input v-model="changeLocationStudentId"/>
+        <label>所在地：</label>
+        <select v-model="changeLocationSelected" class="global-input clickable">
+          <option v-for="item in locationList">{{ item }}</option>
+        </select>
+        <button @click="changeLocation" :class="changeLocationSelected === '' ? '' : 'clickable'" :disabled="changeLocationSelected === ''">修改</button>
+        <p class="notification"><span v-html="notification"></span></p>
+      </div>
+    </div>
+    <div class="menu-page" v-else-if="tabSelected === tabs[5]">
+      <div class="admin-input-div">
+        <label>学号：</label>
+        <input v-model="submitStudentId"/>
+        <p class="notification"><span v-html="notification"></span></p>
+      </div>
+      <Submit :student-id="submitStudentId" :disabled="submitStudentId === ''"/>
     </div>
   </div>
-  <div class="menu-page" v-else-if="tabSelected === tabs[1]">
-    <div class="admin-input-div">
-      <label>学院：</label>
-      <select class="global-input clickable">
-        <option v-for="item in departmentList">{{item}}</option>
-      </select>
-      <button @click="requestNotDoneTestInTwoDaysList" class="clickable">查询</button>
-    </div>
-    <div class="table-div">
-      <table>
-        <tr>
-          <th>学号</th>
-          <th>姓名</th>
-          <th>联系方式</th>
-        </tr>
-        <tr v-for="item in notDoneTestInTwoDaysList">
-          <td>{{item.id}}</td>
-          <td>{{item.name}}</td>
-          <td>{{item.phoneNumber}}</td>
-        </tr>
-      </table>
-    </div>
-  </div>
-  <div class="menu-page" v-else-if="tabSelected === tabs[2]">
-    <div class="admin-input-div">
-      <label>学号：</label>
-      <input/>
-      <button @click="onInputStudentId" class="clickable">查询</button>
-    </div>
-    <div id="student-records-div" class="table-div">
-    </div>
-  </div>
-  <div class="menu-page" v-else-if="tabSelected === tabs[3]">
-    <div class="admin-input-div">
-      <label>学号：</label>
-      <input/>
-      <label>日期：</label>
-      <input type="date" v-model="dateInput" class="clickable"/>
-      <button @click="test" class="clickable">查询</button>
-    </div>
-    <p>{{}}</p>
-    <Submit :student-id="studentIdInput" :disabled="true"/>
-  </div>
-</div>
 </template>
 
 <script setup lang="ts">
 import Menu from "./Menu.vue";
-import {reactive, ref} from "vue";
+import {computed, ref} from "vue";
 import {
   Authority,
   authority,
   authorizedId,
   authorizedPassword,
-  axiosInstance,
+  axiosInstance, type ClockData,
   departmentList,
-  locationList, ResponseStatus
+  locationList, ResponseStatus, type StudentData
 } from "../scripts/SharedState";
 import * as echarts from "echarts"
 import type {EChartsType} from "echarts";
 import Submit from "../components/Submit.vue";
-
-function test() {
-  console.log(dateInput)
-}
+import ClipboardJS from "clipboard";
 
 // 权限检测
 if (authority.value !== Authority.Admin) {
   window.location.hash = "#/login"
 }
 
-interface StudentData {
-  stu_id: string,
-  name: string,
-  class: string,
-  phone_num: string,
-  college: string
-}
-
-let studentIdInput = ref("")
-let dateInput = ref(new Date().toISOString().split("T")[0])
-
-let tabs = ['本日未打卡', "连续两日未打卡", '查询学生记录', '修改记录']
+let tabs = ['本日未打卡', "连续两日未打卡", "本日未完成核酸", '查询学生记录', '修改所在地', '代打卡']
 
 let tabSelected = ref(tabs[0])
 
-let notDoneTestList = ref<Array<StudentData>>([])
+new ClipboardJS(".copy")
 
-let notDoneTestInTwoDaysList = ref<Array<StudentData>>([])
+let notification = ref("")
 
-let targetStudentInfo = ref<StudentData>({
-  stu_id: "",
-  name: "",
-  class: "",
-  phone_num: "",
-  college: "",
-})
+let notDoneClockLocation = ref("全部")
+let notDoneClockCollege = ref("全部")
 
-let studentRecordsChart: null | EChartsType
+let notDoneClockInTwoDaysLocation = ref("全部")
+let notDoneClockInTwoDaysCollege = ref("全部")
 
-function requestNotDoneTestList() {
-  notDoneTestList.value = []
-  axiosInstance.post("/admin/not-done-test", {
+let notDoneDetectLocation = ref("全部")
+let notDoneDetectCollege = ref("全部")
+
+let changeLocationStudentId = ref("")
+let changeLocationSelected = ref("")
+
+let submitStudentId = ref("")
+
+let targetStudentId = ref("")
+let targetStudentHistoryList = ref<Array<ClockData>>([])
+
+let notDoneClockList = ref<Array<StudentData>>([])
+
+let notDoneClockInTwoDaysList = ref<Array<StudentData>>([])
+
+let notDoneDetectList = ref<Array<StudentData>>([])
+
+let targetStudentRecordsChart: null | EChartsType
+
+function requestNotDoneClockList() {
+  notDoneClockList.value = []
+  axiosInstance.post("/admin/not-done-clock", {
     id: authorizedId.value,
     password: authorizedPassword.value,
-    type: authority.value
+    type: authority.value,
+    college: notDoneClockCollege.value,
+    location: notDoneClockLocation.value
   }).then(
       function (response) {
         if (response.data.status === ResponseStatus.SUCCESS) {
-          notDoneTestList.value = response.data.data
+          notDoneClockList.value = response.data.data
         }
       }
   )
-  for (let record of database) {
-    notDoneTestList.value.push(record)
-  }
 }
 
-function requestNotDoneTestInTwoDaysList() {
-  // TODO 接入数据库
-  let database = [
-    {id: "12345678", name: "李伟", phoneNumber: "1008611", department: "软件学院"},
-    {id: "12345678", name: "李伟", phoneNumber: "1008611", department: "软件学院"},
-    {id: "12345678", name: "李伟", phoneNumber: "1008611", department: "软件学院"},
-    {id: "12345679", name: "张强", phoneNumber: "1008611", department: "软件学院"},
-  ]
-
-  notDoneTestInTwoDaysList.value.length = 0
-  for (let record of database) {
-    notDoneTestInTwoDaysList.value.push(record)
-  }
+function requestNotDoneClockInTwoDaysList() {
+  notDoneClockInTwoDaysList.value = []
+  axiosInstance.post("/admin/not-done-clock-in-two-days", {
+    id: authorizedId.value,
+    password: authorizedPassword.value,
+    type: authority.value,
+    college: notDoneClockInTwoDaysCollege.value,
+    location: notDoneClockInTwoDaysLocation.value
+  }).then(
+      function (response) {
+        if (response.data.status === ResponseStatus.SUCCESS) {
+          notDoneClockInTwoDaysList.value = response.data.data
+        }
+      }
+  )
 }
 
-function requestTargetStudentInfo() {
-  // TODO 接入数据库
-  let database = {id: "12345678", name: "李伟", phoneNumber: "1008611", department: "软件学院"}
+function requestNotDoneDetect() {
+  notDoneDetectList.value = []
+  axiosInstance.post("/admin/not-done-detect", {
+    id: authorizedId.value,
+    password: authorizedPassword.value,
+    type: authority.value,
+    college: notDoneDetectCollege.value,
+    location: notDoneDetectLocation.value
+  }).then(
+      function (response) {
+        if (response.data.status === ResponseStatus.SUCCESS) {
+          notDoneDetectList.value = response.data.data
+        }
+      }
+  )
 }
 
 function onTabChanged(tabName: string) {
   tabSelected.value = tabName
 
   // v-if条件渲染会导致部分element对象被删除，因此将chart设置为null，之后重新绑定element
-  studentRecordsChart = null
+  targetStudentRecordsChart = null
+
+  notification.value = ""
+
+  targetStudentHistoryList.value = []
 }
 
-function onInputStudentId() {
-  // TODO 接入数据库
-  if (!studentRecordsChart) {
-    studentRecordsChart = echarts.init(document.getElementById('student-records-div')!);
-  }
+function onInputTargetStudentId() {
+  axiosInstance.post("/students/history", {
+    id: authorizedId.value,
+    password: authorizedPassword.value,
+    type: authority.value,
+    targetId: targetStudentId.value
+  }).then(
+      function (response) {
+        if (response.data.status === ResponseStatus.SUCCESS) {
+          targetStudentHistoryList.value = response.data.data
 
-  let currentTimestamp = new Date().getTime()
+          if (!targetStudentRecordsChart) {
+            targetStudentRecordsChart = echarts.init(document.getElementById('history-graph-div')!);
+          }
 
-  let dateAxis: Array<string> = []
-  for (let i=6; i>=0; i--) {
-    dateAxis.push(new Date(currentTimestamp - i * 24 * 60 * 60 * 1000).toLocaleDateString())
-  }
+          let todayBegin = new Date()
 
-  let hourData: Array<number> = []
-  for (let i=0; i<7; i++) {
-    let startHour = Math.floor(Math.random()*24 - 1)
-    hourData.push(startHour)
-  }
-  console.log(hourData)
+          todayBegin.setHours(0)
+          todayBegin.setMinutes(0)
+          todayBegin.setSeconds(0)
+          todayBegin.setMilliseconds(0)
 
-  let option = {
-    title: {
-      text: '该生7日内打卡情况'
-    },
-    xAxis: {
-      data: dateAxis,
-      axisLine: {
-        show: false
-      },
-      axisTick: {
-        show: false
-      },
-      axisLabel: {
-        margin: 20
-      },
-      splitLine: {
-        show: true,
+          let dateAxis: Array<string> = []
+          let hourData: Array<number> = []
+          let currentHistoryIndex = 0
+          for (let i = 0; i < 7; i++) {
+            const currentDayBegin = new Date(todayBegin.getTime() - i * 24 * 60 * 60 * 1000)
+
+            dateAxis.push(currentDayBegin.toLocaleDateString())
+
+            while (currentHistoryIndex < targetStudentHistoryList.value.length) {
+              const currentRecord = targetStudentHistoryList.value[currentHistoryIndex]
+
+              if (currentDayBegin.getTime() < currentRecord.clock_time &&
+                  currentRecord.clock_time < currentDayBegin.getTime() + 24 * 60 * 60 * 1000) {
+                hourData.push(new Date(currentRecord.clock_time).getHours())
+                break
+              }
+
+              if (currentRecord.clock_time < currentDayBegin.getTime()) {
+                break;
+              }
+              else {
+                currentHistoryIndex++;
+              }
+            }
+
+            if (dateAxis.length > hourData.length) {
+              hourData.push(-1)
+            }
+          }
+
+          dateAxis = dateAxis.reverse()
+          hourData = hourData.reverse()
+
+          let option = {
+            tooltip: {
+              formatter: function(params: any) {
+                return (
+                    params.name + " " + params.value + "点"
+                );
+              }
+            },
+            title: {
+              text: '该生7日内打卡情况'
+            },
+            xAxis: {
+              data: dateAxis,
+              axisLine: {
+                show: false
+              },
+              axisTick: {
+                show: false
+              },
+              axisLabel: {
+                margin: 20
+              },
+              splitLine: {
+                show: true,
+              }
+            },
+            yAxis: {
+              interval: 1,
+              axisLabel: {
+                formatter: '{value} 点'
+              },
+              min: 0,
+              max: 23
+            },
+            series: [
+              {
+                name: '打卡时间',
+                type: 'scatter',
+                data: hourData,
+                symbolSize: 20,
+                color: "darkred"
+              },
+            ]
+          };
+          targetStudentRecordsChart.setOption(option);
+        }
       }
-    },
-    yAxis: {
-      interval: 1,
-      axisLabel: {
-        formatter: '{value} 点'
-      },
-      min: 0,
-      max: 23
-    },
-    series: [
-      {
-        name: '打卡时间',
-        type: 'scatter',
-        data: hourData,
-        symbolSize: 20,
-        color: "darkred"
-      },
-    ]
-  };
-  studentRecordsChart.setOption(option);
+  )
+}
+
+function changeLocation() {
+  axiosInstance.post("/admin/change-location", {
+    id: authorizedId.value,
+    password: authorizedPassword.value,
+    type: authority.value,
+    targetId: changeLocationStudentId.value,
+    targetLocation: changeLocationSelected.value
+  }).then(
+      function (response) {
+        if (response.data.status === ResponseStatus.SUCCESS) {
+          notification.value = "<span style='color: green'>修改成功</span>"
+        }
+        else {
+          notification.value = "<span style='color: red'>修改失败，请检查学生ID</span>"
+        }
+      }
+  )
 }
 </script>
 
@@ -258,7 +429,15 @@ function onInputStudentId() {
   padding-bottom: 20px;
 }
 
-#student-records-div {
-  flex-grow: 1;
+#history-graph-div {
+  flex: 1 1 50%;
+}
+
+#history-table-div {
+  flex: 1 1 50%;
+}
+
+.notification {
+  height: 10%;
 }
 </style>

@@ -9,8 +9,8 @@ export class StudentsController {
     constructor(private studentService: StudentsService) {}
 
     @Post("history")
-    async findHistory(@Body()accountInfo: AccountInfo): Promise<IResponse> {
-        return this.studentService.queryForHistory(accountInfo);
+    async findHistory(@Body()accountInfo: AccountInfo, @Body("targetId")targetId): Promise<IResponse> {
+        return this.studentService.queryForHistory(accountInfo, targetId);
     }
 
     @Post("submit")
@@ -18,8 +18,9 @@ export class StudentsController {
                       @Body("detect_result")detectResult,
                       @Body("location")location,
                       @Body("remarks")remarks,
-                      @Body("college")college): Promise<IResponse> {
-        return this.studentService.submit(accountInfo, detectResult, location, remarks, college);
+                      @Body("college")college,
+                      @Body("targetId")targetId): Promise<IResponse> {
+        return this.studentService.submit(accountInfo, detectResult, location, remarks, college, targetId);
     }
 
     @Post("login")

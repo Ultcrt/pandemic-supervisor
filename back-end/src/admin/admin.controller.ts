@@ -7,17 +7,26 @@ import {AdminService} from "./admin.service";
 export class AdminController {
     constructor(private adminService: AdminService) {}
 
-    @Post("not-done-test")
-    async getNotDoneTestList(@Body()accountInfo: AccountInfo): Promise<IResponse> {
-        return this.adminService.getNotDoneTestList(accountInfo);
+    @Post("not-done-clock")
+    async getNotDoneClockList(@Body()accountInfo: AccountInfo, @Body("college")college, @Body("location")location): Promise<IResponse> {
+        return this.adminService.getNotDoneClockList(accountInfo, college, location);
     }
 
-    @Post("submit")
-    async submitClock(@Body()accountInfo: AccountInfo,
-                      @Body("detect_result")detectResult,
-                      @Body("location")location,
-                      @Body("remarks")remarks): Promise<IResponse> {
-        return this.adminService.submit(accountInfo, detectResult, location, remarks);
+    @Post("not-done-clock-in-two-days")
+    async getNotDoneClockListInTwoDays(@Body()accountInfo: AccountInfo,
+                                       @Body("college")college,
+                                       @Body("location")location): Promise<IResponse> {
+        return this.adminService.getNotDoneClockListInTwoDays(accountInfo, college, location);
+    }
+
+    @Post("not-done-detect")
+    async getNotDoneDetectList(@Body()accountInfo: AccountInfo, @Body("college")college, @Body("location")location): Promise<IResponse> {
+        return this.adminService.getNotDoneDetectList(accountInfo, college, location);
+    }
+
+    @Post("change-location")
+    async changeCollege(@Body()accountInfo: AccountInfo, @Body("targetId")targetId, @Body("targetLocation")targetLocation): Promise<IResponse> {
+        return this.adminService.changeCollege(accountInfo, targetId, targetLocation);
     }
 
     @Post("login")

@@ -28,4 +28,21 @@ export enum ResponseStatus {
     FAIL
 }
 
-export const detectResultTypes = ["未知", "阴性", "阳性"]
+export const detectResultTypes = ["未检测", "结果未知", "阴性", "阳性"]
+
+export interface StudentData {
+    stu_id: string,
+    name: string,
+    class: string,
+    phone_num: string,
+    college: string,
+    location: string
+}
+
+export interface ClockData {
+    clock_time: number,
+    college: string,
+    location: string,
+    detect_result: string,
+    remarks: string,
+}

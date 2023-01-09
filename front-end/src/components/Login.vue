@@ -87,9 +87,12 @@ function login() {
 
 <style scoped>
 #login {
+  background-image: url("../assets/icon.png");
+  background-repeat: no-repeat;
+  background-position: -609px 0;
+  background-attachment: fixed;
   width: 100%;
   height: 100%;
-
   display: flex;
   flex-direction: column;
   justify-content: space-around;

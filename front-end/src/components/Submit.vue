@@ -1,13 +1,13 @@
 <template>
   <div id="submit">
-    <div id="department" class="submit-row">
+    <div id="department" class="submit-row" v-if="authority === Authority.Student">
       <label class="login-label">学院：</label>
       <select v-model="college" class="global-input" :class="props.disabled ? '' : 'clickable'" :disabled="props.disabled">
         <option v-for="item in departmentList">{{item}}</option>
       </select>
     </div>
     <div id="location" class="submit-row">
-      <label class="login-label">所在地：</label>
+      <label class="login-label">当前位置：</label>
       <select v-model="location" class="global-input" :class="props.disabled ? '' : 'clickable'" :disabled="props.disabled">
         <option v-for="item in locationList">{{item}}</option>
       </select>
@@ -18,9 +18,9 @@
         <option v-for="item in detectResultTypes">{{item}}</option>
       </select>
     </div>
-    <textarea v-model="remarks" placeholder=""></textarea>
+    <textarea v-model="remarks" placeholder="" class="global-input" :class="props.disabled ? '' : 'clickable'" :disabled="props.disabled"></textarea>
     <button id="submit-button" class="global-input" :class="readyToSubmit ? 'clickable' : ''" @click="submit" :disabled="!readyToSubmit">提交</button>
-    <p> <span v-html="`<span style='color: red'>${notification}</span>`"></span> </p>
+    <p> <span v-html="notification"></span> </p>
   </div>
 </template>
 
@@ -32,7 +32,7 @@ import {
   axiosInstance,
   authorizedId,
   authorizedPassword,
-  detectResultTypes, ResponseStatus
+  detectResultTypes, ResponseStatus, Authority
 } from "../scripts/SharedState";
 import {computed, ref} from "vue";
 
@@ -46,7 +46,7 @@ let remarks = ref("")
 let notification = ref("")
 
 const readyToSubmit = computed(() => {
-  return college.value !== "" && location.value !== "" && detectResult.value !== ""
+  return (college.value !== "" || authority.value === Authority.Admin) && location.value !== "" && detectResult.value !== ""
 })
 
 function submit() {
@@ -57,14 +57,15 @@ function submit() {
     detect_result: detectResult.value,
     location: location.value,
     remarks: remarks.value,
-    college: college.value
+    college: college.value,
+    targetId: props.studentId
   }).then(
       function (response) {
         if (response.data.status === ResponseStatus.SUCCESS) {
-          notification.value = ""
+          notification.value = "<span style='color: green'>提交成功</span>"
         }
         else {
-          notification.value = "提交失败，请检查学院信息"
+          notification.value = "<span style='color: red'>提交失败，请检查个人信息</span>"
         }
       }
   )

@@ -26,6 +26,12 @@ function tabChanged(tabName: string) {
   width: 20%;
   height: 100%;
   background-color: darkred;
+
+  background-image: url("../assets/icon.png");
+  background-size: 20%;
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  background-attachment: fixed;
 }
 
 .menu-button {
