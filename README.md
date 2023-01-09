@@ -1,5 +1,5 @@
 # pandemic-supervisor
-一个基于Vue的简易疫情健康打卡系统（数据库原理大作业）/ A simple pandemic punch card system base on Vue (Database homework)
+一个基于Vite和NestJS的简易疫情健康打卡系统（数据库原理大作业）/ A simple pandemic punch card system base on Vue (Database homework)
 
 ## Setup
 Simply run (after clone):
