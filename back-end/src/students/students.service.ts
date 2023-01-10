@@ -1,9 +1,10 @@
 import {Injectable} from '@nestjs/common';
 import {Connection, createConnection, RowDataPacket} from "mysql2/promise";
-import {checkAdminAccount, dataBaseLoginInfo} from "../privateInfo";
+import {dataBaseLoginInfo} from "../privateInfo";
 import {AccountInfo, AccountType} from "../interfaces/account";
 import {ClockData, StudentData} from "../interfaces/database";
 import {IResponse, ResponseStatus} from "../interfaces/response";
+import {AdminService} from "../admin/admin.service";
 
 @Injectable()
 export class StudentsService {
@@ -36,7 +37,7 @@ export class StudentsService {
     public async queryForHistory(info: AccountInfo, targetId: string): Promise<IResponse> {
         const connection = await createConnection(dataBaseLoginInfo);
 
-        if (!checkAdminAccount(info) && !await StudentsService.checkStudentAccount(connection, info)) {
+        if (!AdminService.checkAdminAccount(info) && !await StudentsService.checkStudentAccount(connection, info)) {
             return {
                 status: ResponseStatus.FAIL
             }
@@ -67,7 +68,7 @@ export class StudentsService {
     public async submit(info: AccountInfo, detectResult: string, location: string, remarks: string, college: string, targetId: string) {
         const connection = await createConnection(dataBaseLoginInfo);
 
-        if (!checkAdminAccount(info) && !await StudentsService.checkStudentAccount(connection, info, college)) {
+        if (!AdminService.checkAdminAccount(info) && !await StudentsService.checkStudentAccount(connection, info, college)) {
             return {
                 status: ResponseStatus.FAIL
             }

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import {AccountInfo} from "../interfaces/account";
+import {AccountInfo, AccountType} from "../interfaces/account";
 import {IResponse, ResponseStatus} from "../interfaces/response";
 import {createConnection, ResultSetHeader} from "mysql2/promise";
-import {checkAdminAccount, dataBaseLoginInfo} from "../privateInfo";
+import {adminLoginInfo, dataBaseLoginInfo} from "../privateInfo";
 
 @Injectable()
 export class AdminService {
@@ -18,10 +18,16 @@ export class AdminService {
         return todayBegin
     }
 
+    public static checkAdminAccount(info: AccountInfo): boolean {
+        return info.type == AccountType.Admin &&
+            info.id === adminLoginInfo.id &&
+            info.password === adminLoginInfo.password;
+    }
+
     public async getNotDoneClockList(info: AccountInfo, college: string, location: string): Promise<IResponse> {
         const connection = await createConnection(dataBaseLoginInfo);
 
-        if (!checkAdminAccount(info)) {
+        if (!AdminService.checkAdminAccount(info)) {
             return {
                 status: ResponseStatus.FAIL
             }
@@ -50,7 +56,7 @@ export class AdminService {
     public async getNotDoneClockListInTwoDays(info: AccountInfo, college: string, location: string): Promise<IResponse> {
         const connection = await createConnection(dataBaseLoginInfo);
 
-        if (!checkAdminAccount(info)) {
+        if (!AdminService.checkAdminAccount(info)) {
             return {
                 status: ResponseStatus.FAIL
             }
@@ -78,7 +84,7 @@ export class AdminService {
     public async getNotDoneDetectList(info: AccountInfo, college: string, location: string): Promise<IResponse> {
         const connection = await createConnection(dataBaseLoginInfo);
 
-        if (!checkAdminAccount(info)) {
+        if (!AdminService.checkAdminAccount(info)) {
             return {
                 status: ResponseStatus.FAIL
             }
@@ -107,7 +113,7 @@ export class AdminService {
     public async changeCollege(info: AccountInfo, targetId: string, targetLocation: string): Promise<IResponse> {
         const connection = await createConnection(dataBaseLoginInfo);
 
-        if (!checkAdminAccount(info)) {
+        if (!AdminService.checkAdminAccount(info)) {
             return {
                 status: ResponseStatus.FAIL
             }
@@ -129,7 +135,7 @@ export class AdminService {
     }
 
     public async login(info: AccountInfo) {
-        if (!checkAdminAccount(info)) {
+        if (!AdminService.checkAdminAccount(info)) {
             return {
                 status: ResponseStatus.FAIL
             }
