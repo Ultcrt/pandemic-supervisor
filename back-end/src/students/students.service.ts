@@ -1,5 +1,5 @@
 import {Injectable} from '@nestjs/common';
-import {Connection, createConnection} from "mysql2/promise";
+import {Connection, createConnection, RowDataPacket} from "mysql2/promise";
 import {checkAdminAccount, dataBaseLoginInfo} from "../privateInfo";
 import {AccountInfo, AccountType} from "../interfaces/account";
 import {ClockData, StudentData} from "../interfaces/database";
@@ -42,7 +42,7 @@ export class StudentsService {
             }
         }
 
-        const [rows] = await connection.query(
+        const [rows] = await connection.query<RowDataPacket[]>(
             "SELECT `clock_time`, `college`, `clocks`.`location`, `detect_result`, `remarks` " +
             "FROM `clocks` " +
             "INNER JOIN `students` ON `clocks`.`stu_id` = `students`.`stu_id` " +
@@ -52,11 +52,15 @@ export class StudentsService {
             [info.type == AccountType.Student ? info.id : targetId]
         );
 
-        console.log(rows)
+        if (rows.length >0) {
+            return {
+                status: ResponseStatus.SUCCESS,
+                data: rows
+            }
+        }
 
         return {
-            status: ResponseStatus.SUCCESS,
-            data: rows
+            status: ResponseStatus.FAIL
         }
     }
 

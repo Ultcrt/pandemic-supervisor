@@ -124,6 +124,7 @@
         <label>学号：</label>
         <input v-model="targetStudentId"/>
         <button @click="onInputTargetStudentId" class="clickable">查询</button>
+        <p class="notification"><span v-html="notificationOfTarget"></span></p>
       </div>
       <div id="history-graph-div" class="table-div"></div>
       <div id="history-table-div" class="table-div">
@@ -154,14 +155,14 @@
           <option v-for="item in locationList">{{ item }}</option>
         </select>
         <button @click="changeLocation" :class="changeLocationSelected === '' ? '' : 'clickable'" :disabled="changeLocationSelected === ''">修改</button>
-        <p class="notification"><span v-html="notification"></span></p>
+        <p class="notification"><span v-html="notificationOfSubmit"></span></p>
       </div>
     </div>
     <div class="menu-page" v-else-if="tabSelected === tabs[5]">
       <div class="admin-input-div">
         <label>学号：</label>
         <input v-model="submitStudentId"/>
-        <p class="notification"><span v-html="notification"></span></p>
+        <p class="notification"><span v-html="notificationOfSubmit"></span></p>
       </div>
       <Submit :student-id="submitStudentId" :disabled="submitStudentId === ''"/>
     </div>
@@ -196,7 +197,8 @@ let tabSelected = ref(tabs[0])
 
 new ClipboardJS(".copy")
 
-let notification = ref("")
+let notificationOfTarget = ref("")
+let notificationOfSubmit = ref("")
 
 let notDoneClockLocation = ref("全部")
 let notDoneClockCollege = ref("全部")
@@ -280,7 +282,8 @@ function onTabChanged(tabName: string) {
   // v-if条件渲染会导致部分element对象被删除，因此将chart设置为null，之后重新绑定element
   targetStudentRecordsChart = null
 
-  notification.value = ""
+  notificationOfTarget.value = ""
+  notificationOfSubmit.value = ""
 
   targetStudentHistoryList.value = []
 }
@@ -294,6 +297,8 @@ function onInputTargetStudentId() {
   }).then(
       function (response) {
         if (response.data.status === ResponseStatus.SUCCESS) {
+          notificationOfTarget.value = ""
+
           targetStudentHistoryList.value = response.data.data
 
           if (!targetStudentRecordsChart) {
@@ -386,6 +391,9 @@ function onInputTargetStudentId() {
           };
           targetStudentRecordsChart.setOption(option);
         }
+        else {
+          notificationOfTarget.value = "<span style='color: red'>查询失败，请检查学生信息</span>"
+        }
       }
   )
 }
@@ -400,10 +408,10 @@ function changeLocation() {
   }).then(
       function (response) {
         if (response.data.status === ResponseStatus.SUCCESS) {
-          notification.value = "<span style='color: green'>修改成功</span>"
+          notificationOfSubmit.value = "<span style='color: green'>修改成功</span>"
         }
         else {
-          notification.value = "<span style='color: red'>修改失败，请检查学生ID</span>"
+          notificationOfSubmit.value = "<span style='color: red'>修改失败，请检查学生ID</span>"
         }
       }
   )
