@@ -191,6 +191,7 @@ if (authority.value !== Authority.Admin) {
   window.location.hash = "/login"
 }
 
+// 响应式数据定义
 let tabs = ['本日未打卡', "连续两日未打卡", "本日未完成核酸", '查询学生记录', '修改所在地', '代打卡']
 
 let tabSelected = ref(tabs[0])
@@ -225,6 +226,7 @@ let notDoneDetectList = ref<Array<StudentData>>([])
 
 let targetStudentRecordsChart: null | EChartsType
 
+// 请求本日没打卡的学生列表
 function requestNotDoneClockList() {
   notDoneClockList.value = []
   axiosInstance.post("/admin/not-done-clock", {
@@ -242,6 +244,7 @@ function requestNotDoneClockList() {
   )
 }
 
+// 请求两日内没打卡的学生列表
 function requestNotDoneClockInTwoDaysList() {
   notDoneClockInTwoDaysList.value = []
   axiosInstance.post("/admin/not-done-clock-in-two-days", {
@@ -259,6 +262,7 @@ function requestNotDoneClockInTwoDaysList() {
   )
 }
 
+// 请求本日没做核酸的学生列表
 function requestNotDoneDetect() {
   notDoneDetectList.value = []
   axiosInstance.post("/admin/not-done-detect", {
@@ -276,6 +280,7 @@ function requestNotDoneDetect() {
   )
 }
 
+// 根据菜单栏选择详情页
 function onTabChanged(tabName: string) {
   tabSelected.value = tabName
 
@@ -288,6 +293,7 @@ function onTabChanged(tabName: string) {
   targetStudentHistoryList.value = []
 }
 
+// 请求该学生的历史数据
 function onInputTargetStudentId() {
   axiosInstance.post("/students/history", {
     id: authorizedId.value,
@@ -312,6 +318,7 @@ function onInputTargetStudentId() {
           todayBegin.setSeconds(0)
           todayBegin.setMilliseconds(0)
 
+          // 创建散点图的坐标轴与数据
           let dateAxis: Array<string> = []
           let hourData: Array<number> = []
           let currentHistoryIndex = 0
@@ -320,6 +327,7 @@ function onInputTargetStudentId() {
 
             dateAxis.push(currentDayBegin.toLocaleDateString())
 
+            // 定位到当日最新的打卡数据
             while (currentHistoryIndex < targetStudentHistoryList.value.length) {
               const currentRecord = targetStudentHistoryList.value[currentHistoryIndex]
 
@@ -398,6 +406,7 @@ function onInputTargetStudentId() {
   )
 }
 
+// 修改学生所在地
 function changeLocation() {
   axiosInstance.post("/admin/change-location", {
     id: authorizedId.value,

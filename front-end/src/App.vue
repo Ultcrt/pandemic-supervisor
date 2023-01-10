@@ -12,12 +12,15 @@ const routes: { [key: string]: Component } = {
   "/student": Student,
 }
 
+// 默认路由到登录页面
 window.location.hash = "/login"
+
 let currentLocation = ref(window.location.hash)
 window.addEventListener("hashchange", (event) => {
   currentLocation.value = window.location.hash
 })
 
+// 路由到指定页面
 let currentPage = computed(() => {
   return routes[currentLocation.value.slice(1)]
 })

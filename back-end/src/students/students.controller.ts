@@ -4,6 +4,7 @@ import {AccountInfo} from "../interfaces/account";
 import {IResponse} from "../interfaces/response";
 import {ClockData} from "../interfaces/database";
 
+// 学生API接口侦听
 @Controller('api/students')
 export class StudentsController {
     constructor(private studentService: StudentsService) {}

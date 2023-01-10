@@ -36,6 +36,7 @@ import {
   ResponseStatus
 } from "../scripts/SharedState";
 
+// 响应式数据定义
 let loginType = ref("学生")
 
 let id = ref("")
@@ -43,8 +44,10 @@ let password = ref("")
 
 let notification = ref("")
 
+// 用户登录
 function login() {
   switch (loginType.value) {
+    // 学生登陆处理
     case "学生":
       axiosInstance.post("/students/login", {
         id: id.value,
@@ -63,6 +66,7 @@ function login() {
         }
       })
       break
+    // 管理员登录处理
     case "管理员":
       axiosInstance.post("/admin/login", {
         id: id.value,

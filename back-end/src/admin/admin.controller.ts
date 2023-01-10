@@ -3,6 +3,7 @@ import {AccountInfo} from "../interfaces/account";
 import {IResponse} from "../interfaces/response";
 import {AdminService} from "./admin.service";
 
+// 管理员API接口侦听
 @Controller('api/admin')
 export class AdminController {
     constructor(private adminService: AdminService) {}
@@ -25,8 +26,8 @@ export class AdminController {
     }
 
     @Post("change-location")
-    async changeCollege(@Body()accountInfo: AccountInfo, @Body("targetId")targetId, @Body("targetLocation")targetLocation): Promise<IResponse> {
-        return this.adminService.changeCollege(accountInfo, targetId, targetLocation);
+    async changeLocation(@Body()accountInfo: AccountInfo, @Body("targetId")targetId, @Body("targetLocation")targetLocation): Promise<IResponse> {
+        return this.adminService.changeLocation(accountInfo, targetId, targetLocation);
     }
 
     @Post("login")

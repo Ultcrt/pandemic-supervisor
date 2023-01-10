@@ -4,8 +4,10 @@ import {IResponse, ResponseStatus} from "../interfaces/response";
 import {createConnection, ResultSetHeader} from "mysql2/promise";
 import {adminLoginInfo, dataBaseLoginInfo} from "../privateInfo";
 
+// 管理员API接口处理
 @Injectable()
 export class AdminService {
+    // 用于获取前N天的开始时间戳
     private static getDayBegin(offset: number): Date {
         let todayBegin = new Date()
 
@@ -18,21 +20,25 @@ export class AdminService {
         return todayBegin
     }
 
+    // 检查管理员权限
     public static checkAdminAccount(info: AccountInfo): boolean {
         return info.type == AccountType.Admin &&
             info.id === adminLoginInfo.id &&
             info.password === adminLoginInfo.password;
     }
 
+    // 获取本日没打卡的列表
     public async getNotDoneClockList(info: AccountInfo, college: string, location: string): Promise<IResponse> {
         const connection = await createConnection(dataBaseLoginInfo);
 
+        // 检查管理员权限
         if (!AdminService.checkAdminAccount(info)) {
             return {
                 status: ResponseStatus.FAIL
             }
         }
 
+        // 获取当前开始时间戳
         let todayBegin = AdminService.getDayBegin(0)
 
         const [rows] = await connection.query(
@@ -53,15 +59,18 @@ export class AdminService {
         }
     }
 
+    // 获取两天内没打卡的学生列表
     public async getNotDoneClockListInTwoDays(info: AccountInfo, college: string, location: string): Promise<IResponse> {
         const connection = await createConnection(dataBaseLoginInfo);
 
+        // 检查管理员权限
         if (!AdminService.checkAdminAccount(info)) {
             return {
                 status: ResponseStatus.FAIL
             }
         }
 
+        // 获取昨天前开始时间戳
         let twoDaysAgoBegin = AdminService.getDayBegin(1)
 
         const [rows] = await connection.query(
@@ -81,15 +90,18 @@ export class AdminService {
         }
     }
 
+    // 获取本日没有做核酸的学生列表
     public async getNotDoneDetectList(info: AccountInfo, college: string, location: string): Promise<IResponse> {
         const connection = await createConnection(dataBaseLoginInfo);
 
+        // 检查管理员权限
         if (!AdminService.checkAdminAccount(info)) {
             return {
                 status: ResponseStatus.FAIL
             }
         }
 
+        // 获取当前开始时间戳
         let todayBegin = AdminService.getDayBegin(0)
 
         const [rows] = await connection.query(
@@ -110,9 +122,10 @@ export class AdminService {
         }
     }
 
-    public async changeCollege(info: AccountInfo, targetId: string, targetLocation: string): Promise<IResponse> {
+    public async changeLocation(info: AccountInfo, targetId: string, targetLocation: string): Promise<IResponse> {
         const connection = await createConnection(dataBaseLoginInfo);
 
+        // 检查管理员权限
         if (!AdminService.checkAdminAccount(info)) {
             return {
                 status: ResponseStatus.FAIL
@@ -122,6 +135,7 @@ export class AdminService {
         const [rows] = await connection.query<ResultSetHeader>("UPDATE `students` SET `location` = ? WHERE `stu_id` = ?",
             [targetLocation, targetId]);
 
+        // 修改行数为0，说明更新失败
         if (rows.changedRows === 0) {
             return {
                 status: ResponseStatus.FAIL
@@ -134,6 +148,7 @@ export class AdminService {
         }
     }
 
+    // 管理员登录
     public async login(info: AccountInfo) {
         if (!AdminService.checkAdminAccount(info)) {
             return {

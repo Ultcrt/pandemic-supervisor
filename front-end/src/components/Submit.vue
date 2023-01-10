@@ -36,6 +36,7 @@ import {
 } from "../scripts/SharedState";
 import {computed, ref} from "vue";
 
+// 响应式数据定义
 let props = defineProps(["studentId", "disabled"])
 
 let college = ref("")
@@ -45,10 +46,12 @@ let remarks = ref("")
 
 let notification = ref("")
 
+// 计算属性，用于控制提交按钮是否可用
 const readyToSubmit = computed(() => {
   return (college.value !== "" || authority.value === Authority.Admin) && location.value !== "" && detectResult.value !== ""
 })
 
+// 提交打卡数据
 function submit() {
   axiosInstance.post("/students/submit", {
     id: authorizedId.value,

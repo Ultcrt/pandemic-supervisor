@@ -7,13 +7,16 @@
 <script setup lang="ts">
 import {ref} from "vue";
 
+// 响应式数据
 const props = defineProps(["tabs"])
 const emit = defineEmits(['tab-changed'])
 
 let tabSelected = ref(props.tabs[0])
 
+// 菜单栏选项点击事件
 function tabChanged(tabName: string) {
   tabSelected.value = tabName
+  // 将事件抛出到上层
   emit('tab-changed', tabName)
 }
 </script>

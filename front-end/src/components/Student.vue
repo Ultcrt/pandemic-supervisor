@@ -46,12 +46,14 @@ if (authority.value !== Authority.Student) {
   window.location.hash = "/login"
 }
 
+// 响应式数据定义
 let tabs = ['健康打卡', '打卡记录']
 
 let tabSelected = ref(tabs[0])
 
 const historyList = ref<Array<ClockData>>([])
 
+// 请求历史数据
 function requestHistory() {
   historyList.value = []
   axiosInstance.post("/students/history", {
@@ -67,6 +69,7 @@ function requestHistory() {
   )
 }
 
+// 根据菜单栏选择详情页
 function onTabChanged(tabName: string) {
   tabSelected.value = tabName
 

@@ -6,10 +6,11 @@ import {ClockData, StudentData} from "../interfaces/database";
 import {IResponse, ResponseStatus} from "../interfaces/response";
 import {AdminService} from "../admin/admin.service";
 
+// 学生API接口处理
 @Injectable()
 export class StudentsService {
+    // 检查学生账户权限
     private static async checkStudentAccount(connection: Connection, info: AccountInfo, college?: string): Promise<boolean> {
-        // 检查学生权限
         if (info.type == AccountType.Student) {
             let rows: StudentData[]
 
@@ -34,9 +35,11 @@ export class StudentsService {
         return false;
     }
 
+    // 请求学生历史
     public async queryForHistory(info: AccountInfo, targetId: string): Promise<IResponse> {
         const connection = await createConnection(dataBaseLoginInfo);
 
+        // 检查学生权限和管理员权限
         if (!AdminService.checkAdminAccount(info) && !await StudentsService.checkStudentAccount(connection, info)) {
             return {
                 status: ResponseStatus.FAIL
@@ -65,9 +68,11 @@ export class StudentsService {
         }
     }
 
+    // 提交打卡
     public async submit(info: AccountInfo, detectResult: string, location: string, remarks: string, college: string, targetId: string) {
         const connection = await createConnection(dataBaseLoginInfo);
 
+        // 检查学生权限和管理员权限
         if (!AdminService.checkAdminAccount(info) && !await StudentsService.checkStudentAccount(connection, info, college)) {
             return {
                 status: ResponseStatus.FAIL
@@ -78,6 +83,7 @@ export class StudentsService {
 
         let detectId = null
 
+        // 如果查询出错，则返回失败
         try {
             let detectsRows: ClockData[] = []
             if (detectResult !== "未检测") {
@@ -106,6 +112,7 @@ export class StudentsService {
         }
     }
 
+    // 学生登录
     public async login(info: AccountInfo) {
         const connection = await createConnection(dataBaseLoginInfo);
 
