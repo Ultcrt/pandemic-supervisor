@@ -188,7 +188,7 @@ import ClipboardJS from "clipboard";
 
 // 权限检测
 if (authority.value !== Authority.Admin) {
-  window.location.hash = "#/login"
+  window.location.hash = "/login"
 }
 
 let tabs = ['本日未打卡', "连续两日未打卡", "本日未完成核酸", '查询学生记录', '修改所在地', '代打卡']

@@ -18,7 +18,7 @@
         <option v-for="item in detectResultTypes">{{item}}</option>
       </select>
     </div>
-    <textarea v-model="remarks" placeholder="" class="global-input" :class="props.disabled ? '' : 'clickable'" :disabled="props.disabled"></textarea>
+    <textarea v-model="remarks" placeholder="备注" class="global-input" :class="props.disabled ? '' : 'clickable'" :disabled="props.disabled"></textarea>
     <button id="submit-button" class="global-input" :class="readyToSubmit ? 'clickable' : ''" @click="submit" :disabled="!readyToSubmit">提交</button>
     <p> <span v-html="notification"></span> </p>
   </div>

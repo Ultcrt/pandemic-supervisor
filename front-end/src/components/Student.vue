@@ -43,7 +43,7 @@ import Submit from "../components/Submit.vue";
 
 // 权限检测
 if (authority.value !== Authority.Student) {
-  window.location.hash = "#/login"
+  window.location.hash = "/login"
 }
 
 let tabs = ['健康打卡', '打卡记录']
